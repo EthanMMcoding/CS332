@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <math.h>
+
+void is_prime(int x){
+  double x_sqrt = sqrt(x);
+  if(x%2 == 0 || x <= 1 || x==1){
+    if(x == 2){
+      printf("The given number is prime\n");
+      return;
+    }
+    printf("The given number is not prime\n");
+    return;
+  }
+  for(int i = 2; i <= x_sqrt; i++){
+    if(x%i == 0){
+      printf("The given number is not prime\n");
+      return;
+    }
+  }
+  printf("The given number is prime\n");
+  return;
+}
+
+int main(){
+
+  int user_input = 0;
+
+  printf("Enter a number: ");
+	scanf("%d", &user_input);
+  printf("The memory address of the user's input is %p\n", &user_input);
+
+  is_prime(user_input);
+
+  return 0;
+}
