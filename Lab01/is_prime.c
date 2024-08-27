@@ -3,7 +3,7 @@
 
 void is_prime(int x){
   double x_sqrt = (int)sqrt(x);
-  if(x%2 == 0 || x <= 1 || x==1){
+  if(x%2 == 0 || x <= 1){
     if(x == 2){
       printf("The given number is prime\n");
       return;
