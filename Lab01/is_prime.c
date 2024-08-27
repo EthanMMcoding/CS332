@@ -2,7 +2,7 @@
 #include <math.h>
 
 void is_prime(int x){
-  double x_sqrt = (int)sqrt(x);
+  double x_sqrt = (int)sqrt(x); // convert from double to int for later comparison in the for loop
   if(x%2 == 0 || x <= 1){
     if(x == 2){
       printf("The given number is prime\n");
