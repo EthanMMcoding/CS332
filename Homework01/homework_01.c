@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <prime_or_factorial.h>
+#include "prime_or_factorial.h"
 
 int main(){
 
