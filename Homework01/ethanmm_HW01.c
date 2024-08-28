@@ -25,9 +25,7 @@ int countVowels(char* s){
   };
   int i = 0;
   while(s[i] != 0){
-    printf("\n");
     if(vowels[s[i]]){
-      printf("\n");
       result += 1;
     }
     i++;
