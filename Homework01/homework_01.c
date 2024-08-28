@@ -4,7 +4,7 @@
 
 int main(){
 
-  prime_or_factorial(4);
+  printf("%s", prime_or_factorial(4));
 
   return 0;
 }

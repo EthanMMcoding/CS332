@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int factorial(int n){
   if(n == 0 || n == 1){
@@ -39,9 +40,9 @@ char* prime_or_factorial(int n){
   }
   else{
     int factorial_n = factorial(n);
-    int length_of_factorial = snprintf(NULL, 0, "%d", factorial_n);
-    char str_factorial[length_of_factorial+1];
-    snprintf(str_factorial, length_of_factorial, "%d", factorial_n);
+    int length = snprintf(NULL, 0, "%d", factorial_n);
+    char* str_factorial = malloc(length+1);
+    snprintf(str_factorial, length+1, "%d", factorial_n);
     return str_factorial; // need to convert this to string
   }
 }
