@@ -31,7 +31,7 @@ bool is_prime(int x){
   return true;
 }
 
-char* prime_or_factorial(int n){
+char* primeOrFactorial(int n){
   if(n <= 1){
     return "Invalid Input";
   }
