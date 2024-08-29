@@ -11,7 +11,7 @@ void is_prime(int x){
     printf("The given number is not prime\n");
     return;
   }
-  for(int i = 2; i <= x_sqrt; i++){
+  for(int i = 3; i <= x_sqrt; i+=2){
     if(x%i == 0){
       printf("The given number is not prime\n");
       return;
