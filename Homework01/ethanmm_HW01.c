@@ -1,3 +1,5 @@
+/* compile with gcc -o homework_01 ethanmm_HW01.c -lm */
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -19,7 +21,7 @@ int countVowels(char* s){
     ['u'] = 'u'
   };
   int i = 0;
-  while(s[i] != 0){       // Count on null terminator to end the loop
+  while(s[i]){       // count on null terminator to end the loop
     if(vowels[s[i]]){
       result += 1;
     }
@@ -72,16 +74,16 @@ int factorial(int n){
   }
 }
 
-bool isPrime(int x){
-  double x_sqrt = (int)sqrt(x);
-  if(x%2 == 0 || x <= 1){
-    if(x == 2){
+bool isPrime(int n){
+  int x_sqrt = (int)sqrt(n);
+  if(n%2 == 0 || n <= 1){
+    if(n == 2){
       return true;
     }
     return false;
   }
   for(int i = 3; i <= x_sqrt; i+=2){
-    if(x%i == 0){
+    if(n%i == 0){
       return false;
     }
   }
