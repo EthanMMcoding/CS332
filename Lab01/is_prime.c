@@ -1,3 +1,5 @@
+/* compile with gcc -o is_prime is_prime.c -lm */
+
 #include <stdio.h>
 #include <math.h>
 
