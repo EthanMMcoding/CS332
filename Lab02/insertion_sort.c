@@ -1,3 +1,5 @@
+/* compile with gcc -o sort insertion_sort.c */
+
 #include <stdio.h>
 
 void insertion_sort(int arr[], int size){
