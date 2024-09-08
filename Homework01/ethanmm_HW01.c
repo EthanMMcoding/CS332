@@ -21,7 +21,7 @@ int countVowels(char* s){
     ['u'] = 'u'
   };
   int i = 0;
-  while(s[i]){       // count on null terminator to end the loop
+  while(s[i]){
     if(vowels[s[i]]){
       result += 1;
     }
@@ -40,21 +40,29 @@ bool evenSquare(int n){
   }
 }
 
-int* replaceEvenWithZero(int* arr, int size){
-  static int* new_arr;
-  new_arr = (int*)malloc(size * sizeof(int));
+// int* replaceEvenWithZero(int* arr, int size){
+//   static int* new_arr;
+//   new_arr = malloc(size * sizeof(int));
+//   for(int i = 0; i < size; i++){
+//     if(arr[i]%2 == 0){
+//       new_arr[i] = 0;
+//     }
+//     else{
+//       new_arr[i] = arr[i];
+//     }
+//   }
+//   return new_arr;
+// }
+
+void replaceEvenWithZero(int arr[], int size){
   for(int i = 0; i < size; i++){
     if(arr[i]%2 == 0){
-      new_arr[i] = 0;
-    }
-    else{
-      new_arr[i] = arr[i];
+      arr[i] = 0;
     }
   }
-  return new_arr;
 }
 
-int UABIndexSum(int* arr, int size){
+int UABIndexSum(int arr[], int size){
   int sum = 0;
   for(int i = 0; i < size; i++){
     if(i == arr[i]){
@@ -134,28 +142,25 @@ int main(){
   /* replaceEvenWithZero testing */
   printf("\n");
   printf("---Beginning of replaceEvenWithZero testing---\n");
-  int replace_with_zero_arr[3][4] = {
-    {1, 2, 3, 4},
-    {2, 4, 6},
-    {1, 3, 5}
-  };
+
   int replace_with_zero_arr1[] = {1, 2, 3, 4};
   int replace_with_zero_arr2[] = {2, 4, 6};
   int replace_with_zero_arr3[] = {1, 3, 5};
-  
-  int* new_arr1 = replaceEvenWithZero(replace_with_zero_arr1, 4);
-  int* new_arr2 = replaceEvenWithZero(replace_with_zero_arr2, 3);
-  int* new_arr3 = replaceEvenWithZero(replace_with_zero_arr3, 3);
+
+  replaceEvenWithZero(replace_with_zero_arr1, 4);
+  replaceEvenWithZero(replace_with_zero_arr2, 3);
+  replaceEvenWithZero(replace_with_zero_arr3, 3);
+
   for(int i = 0; i < 4; i++){
-    printf("The value at index: %d of new_arr1 is: %d\n", i, new_arr1[i]);
+    printf("The value at index: %d of new_arr1 is: %d\n", i, replace_with_zero_arr1[i]);
   }
   printf("\n");
   for(int i = 0; i < 3; i++){
-    printf("The value at index: %d of new_arr2 is: %d\n", i, new_arr2[i]);
+    printf("The value at index: %d of new_arr2 is: %d\n", i, replace_with_zero_arr2[i]);
   }
   printf("\n");
   for(int i = 0; i < 3; i++){
-    printf("The value at index: %d of new_arr3 is: %d\n", i, new_arr3[i]);
+    printf("The value at index: %d of new_arr3 is: %d\n", i, replace_with_zero_arr3[i]);
   }
   printf("\n");
 
