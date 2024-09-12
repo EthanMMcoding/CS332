@@ -3,10 +3,10 @@
 
 void insertion_sort_str(char **arr, size_t size){
   for(int i = 0; i < size; i++){
-    char *key = arr[i];
+    char *key = *(arr + i);
     int j = i - 1;
-    while(j >= 0 && arr[j] > key){
-      arr[j + 1] = arr[j];
+    while(j >= 0 && strcmp(arr[j], key) > 0){
+      *(arr + j + 1) = *(arr + j);
       j -= 1;
     }
     arr[j + 1] = key;
@@ -15,26 +15,23 @@ void insertion_sort_str(char **arr, size_t size){
  
 int main(int argc, char** argv) {
 
-  /* figuring out the string functions */
+  char *arr[] = {"Z", "b", "dd", "aa" ,"ZZZ", "c", "eee", "YY", "f", "xx", "fff", "DD", "yy", "zz", "B", "CC", "AA", "dd", "x", "EE", "FF", "X", "xx", "AAA", "cc", "Y", "ZZ"};
 
-  /* 
-  
-  stackoverflow post: "How do I create an array of strings in C?"
-  what does it mean in the answer to this post that string constants may not be writable? 
+  size_t arr_size = sizeof(arr)/sizeof(arr[0]);
 
-  */
-
-  char arr[3][6] = 
-  {
-    "hello", 
-    "nice", 
-    "bob"   };
-
-  printf("[");
-  for(int i = 0; i < 2; i++){
+  printf("The unsorted array is:\n[");
+  for(int i = 0; i < arr_size-1; i++){
     printf("%s, ", arr[i]);
   }
-  printf("%s]\n", arr[2]);
+  printf("%s]\n", arr[arr_size-1]);
+
+  insertion_sort_str(arr, arr_size);
+
+  printf("[");
+  for(int i = 0; i < arr_size-1; i++){
+    printf("%s, ", arr[i]);
+  }
+  printf("%s]\n", arr[arr_size-1]);
 
   return 0;  
 } 
