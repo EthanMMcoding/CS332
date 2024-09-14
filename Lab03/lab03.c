@@ -1,4 +1,4 @@
-/* compile with gcc -o str_sort insertion_sort_lab3.c */
+/* compile with gcc -o lab03 lab03.c */
 #include <stdio.h>  
 #include <string.h>
 #include <stdlib.h>
