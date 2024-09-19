@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <string.h>
 
 #define BUFF_SIZE 4096
 
@@ -15,6 +16,11 @@ int main(int argc, char *argv[]){
 		printf("Usage: %s <source_filename> <destination_filename>\n", argv[0]);
 		exit (-1);
 	}
+
+  if (!strcmp(argv[1], argv[2])){
+    printf("Error file names are the same\n");
+    exit(-1);
+  }
 
   write_file_descriptor = open(argv[1], O_WRONLY|O_APPEND);
   read_file_descriptor = open(argv[2], O_RDONLY);
