@@ -1,3 +1,4 @@
+/* compile with gcc -o append Lab04.c */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
