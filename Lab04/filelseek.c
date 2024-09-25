@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 		exit (-1);
 	}
 
-	if (lseek(RWFileDescriptor, -10, SEEK_CUR) >= 0){
+	if (lseek(RWFileDescriptor, SEEKSIZE, SEEK_END) >= 0){
 		if((n = read(RWFileDescriptor, buf, BUFFSIZE)) > 0){
 			if (write(STDOUT_FILENO, buf, n) != n) {
 				printf("Error writing to file\n");

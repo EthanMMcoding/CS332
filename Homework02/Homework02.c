@@ -1,4 +1,4 @@
-#define S_IFMT 0170000
+#define _XOPEN_SOURCE >= 700
 
 #include <stdio.h>
 #include <dirent.h>
@@ -7,17 +7,20 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <time.h>
-#include <linux/stat.h>
 
 void print_stat(struct stat statbuf){
   printf("file type:          ");
 
-  switch (statbuf.st_mode & S_IFMT)
-  {
-  case S_IFREG:
-    break;
-  
-  default:
+  switch (statbuf.st_mode & S_IFMT){
+  case S_IFREG: printf("regular\n");   break;
+  case S_IFDIR: printf("directory\n"); break;
+  case S_IFCHR: printf("character\n"); break;
+  case S_IFBLK: printf("block\n");     break;
+  case S_IFIFO: printf("FIFO/pipe\n"); break;
+  case S_IFLNK: printf("symlink\n");   break;
+  case S_IFSOCK: printf("socket\n");   break;
+  default :
+    printf("unkown?\n");
     break;
   }
 }
