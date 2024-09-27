@@ -22,38 +22,46 @@ char *filetype(unsigned char type) {
   return str;
 }
 
-void traverse(DIR *parentDir){
+void traverse(const char *arg){
+  DIR *parentDir = opendir(arg);
+  if (parentDir == NULL) { 
+    printf ("Error opening directory '%s'\n", arg); 
+    exit (-1);
+  }
   struct dirent *dirent;
   int count = 1;
+  static int level = 0;
   while((dirent = readdir(parentDir)) != NULL){ 
     if(strcmp(dirent->d_name, ".") == 0 || strcmp(dirent->d_name, "..") == 0){
       continue;
     }
     if(strcmp(filetype(dirent->d_type), "directory") != 0){
+      for(int i = 0; i < level; i++){
+        printf("    ");
+      }
       printf ("[%d] %s (%s)\n", count, dirent->d_name, filetype(dirent->d_type)); 
     }
     else{
+      for(int i = 0; i < level; i++){
+        printf("    ");
+      }
+      level++;
       printf ("[%d] %s (%s)\n", count, dirent->d_name, filetype(dirent->d_type));
-      parentDir = opendir(dirent->d_name);
-      traverse(parentDir);
-      closedir (parentDir);
+      char path[PATH_MAX] = {0};
+      strcat(path, arg); strcat(path, "/"); strcat(path, dirent->d_name);
+      traverse(path);
     }
     count++; 
-  } 
+  }
+  level--;
+  closedir (parentDir);
 }
 
 int main (int argc, char **argv) {  
-  DIR *parentDir; 
 
   if (argc < 2) { 
     printf ("Usage: %s <dirname>\n", argv[0]); 
     exit(-1);
-  } 
-  parentDir = opendir (argv[1]); 
-  if (parentDir == NULL) { 
-    printf ("Error opening directory '%s'\n", argv[1]); 
-    exit (-1);
-  } 
-  traverse (parentDir);
-  closedir (parentDir);
+  }
+  traverse (argv[1]);
 }
