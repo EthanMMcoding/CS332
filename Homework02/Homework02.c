@@ -1,4 +1,5 @@
 #define _XOPEN_SOURCE 700
+#define _DEFAULT_SOURCE
 
 #include <stdio.h>
 #include <dirent.h>
@@ -7,39 +8,35 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <time.h>
+#include <fcntl.h>
+#include <string.h>
 
-typedef int TESTFUNC(char a, char b, char c);
-
-typedef int MYFUNC(int a, int b);
-
-char s(char a, char b, char c){
-  if(a == 's'){
-    return a;
-  }
-  else if(b == 's'){
-    return b;
-  }
-  else{
-    return c;
+void insertion_sort_str(char **arr, int size){
+  for(int i = 0; i < size; i++){
+    char *key = arr[i];
+    int j = i - 1;
+    while(j >= 0 && strcmp(arr[j], key) > 0){
+      arr[j + 1] = arr[j];
+      j -= 1;
+    }
+    arr[j + 1] = key;
   }
 }
 
-void opfunc2(char a, char b, char c, TESTFUNC *f){
-  return f(a, b, c);
-}
-
-int add(int a, int b) {
-	printf("This is the add function\n");
-	return a + b;
-}
-
-int sub(int a, int b) {
-	printf("This is the subtraction function\n");
-	return a - b;
-}
-
-int opfunc(int a, int b, MYFUNC *f) {
-	return f(a, b);
+char *filetype(unsigned char type) {
+  char *str;
+  switch(type) {
+  case DT_BLK: str = "block device"; break;
+  case DT_CHR: str = "character device"; break;
+  case DT_DIR: str = "directory"; break;
+  case DT_FIFO: str = "named pipe (FIFO)"; break;
+  case DT_LNK: str = "symbolic link"; break;
+  case DT_REG: str = "regular file"; break;
+  case DT_SOCK: str = "UNIX domain socket"; break;
+  case DT_UNKNOWN: str = "unknown file type"; break;
+  default: str = "UNKNOWN";
+  }
+  return str;
 }
 
 void print_stat(struct stat statbuf){
@@ -76,87 +73,208 @@ void print_stat(struct stat statbuf){
   printf("Last modification:        %s\n", ctime(&statbuf.st_mtim));
 }
 
-/* will be the -S functionality required in homework */
-void list_files(struct stat sb, char **path){
-  DIR *dp;
-  struct dirent *dp_buf;
-  dp = opendir(path);
-  if(!dp){
-    printf("opendir error\n");
+void list_all_files(const char *arg){
+  DIR *parentDir = opendir(arg);
+  if (parentDir == NULL) { 
+    printf ("Error opening directory '%s'\n", arg); 
+    exit (-1);
   }
-  while(dp_buf = readdir(dp)){
-    if(!dp_buf){
-      printf("End of file reached or error reading\n");
-    }
-  }
-  // printf("%s                        (%lld)\n", argv, (long long) sb.st_size); // should print out file name and its size
-}
-
-void traverse(){
-
-}
-
-int main(int argc, char *argv[]){
-
-  int opt;
-
-  while((opt = getopt(argc, argv, "Ss:f:r")) != -1)  
-    {  
-        switch(opt)  
-        {  
-            case 'S':  
-            case 's':  
-            case 'r':  
-                printf("option: %c\n", opt);  
-                break;  
-            case 'f':  
-                printf("filename: %s\n", optarg);  
-                break;  
-            case ':':  
-                printf("option needs a value\n");  
-                break;  
-            case '?':  
-                printf("unknown option: %c\n", optopt); 
-                break;  
-        }  
-    }  
-
-  int i;
-  struct stat buf;
-  char *ptr;
-
-  for(int i = 1; i < argc; i++){
-    printf("%s: ", argv[i]);
-    if(lstat(argv[i], &buf) < 0){
-      printf("lstat error\n");
+  struct dirent *dirent;
+  static int level = 0;
+  struct stat statbuf;
+  int fd;
+  if ((fd = open(arg, O_RDONLY)) == -1) {
+		printf("Error opening file %s\n", arg);
+		perror("open");
+		exit(-1);
+	}
+	read(fd, &statbuf, sizeof(struct stat));
+	close(fd);
+  while((dirent = readdir(parentDir)) != NULL){ 
+    if(strcmp(dirent->d_name, ".") == 0 || strcmp(dirent->d_name, "..") == 0){
       continue;
     }
-    if(S_ISREG(buf.st_mode)){
-      ptr = "regular\n";
-    }
-    else if(S_ISDIR(buf.st_mode)){
-      ptr = "directory\n";
-    }
-    else if(S_ISCHR(buf.st_mode)){
-      ptr = "character special\n";
-    }
-    else if(S_ISBLK(buf.st_mode)){
-      ptr = "block\n";
-    }
-    else if(S_ISFIFO(buf.st_mode)){
-      ptr = "fifo\n";
-    }
-    else if(S_ISLNK(buf.st_mode)){
-      ptr = "link\n";
-    }
-    else if(S_ISSOCK(buf.st_mode)){
-      ptr = "socket\n";
+    else if(strcmp(filetype(dirent->d_type), "directory") != 0){
+      for(int i = 0; i < level; i++){
+        printf("    ");
+      }
+      printf ("%s (%lld)\n", dirent->d_name, (long long) statbuf.st_size); 
     }
     else{
-      ptr = "unknown mode\n";
+      for(int i = 0; i < level; i++){
+        printf("    ");
+      }
+      level++;
+      printf ("%s (%lld)\n", dirent->d_name, (long long) statbuf.st_size);
+      char path[PATH_MAX] = {0};
+      strcat(path, arg); strcat(path, "/"); strcat(path, dirent->d_name);
+      list_all_files(path);
     }
-    printf("%s\n", ptr);
-  print_stat(buf);
   }
-  exit(0);
+  level--;
+  closedir (parentDir);
+}
+
+void s(const char *arg, long long size){
+  DIR *parentDir = opendir(arg);
+  if (parentDir == NULL) { 
+    printf ("Error opening directory '%s'\n", arg); 
+    exit (-1);
+  }
+  struct dirent *dirent;
+  static int level = 0;
+  struct stat statbuf;
+  int fd;
+  if ((fd = open(arg, O_RDONLY)) == -1) {
+		printf("Error opening file %s\n", arg);
+		perror("open");
+		exit(-1);
+	}
+	read(fd, &statbuf, sizeof(struct stat));
+	close(fd);
+  while((dirent = readdir(parentDir)) != NULL){ 
+    if(strcmp(dirent->d_name, ".") == 0 || strcmp(dirent->d_name, "..") == 0){
+      continue;
+    }
+    else if((long long) statbuf.st_size < size){
+      continue;
+    }
+    else if(strcmp(filetype(dirent->d_type), "directory") != 0){
+      for(int i = 0; i < level; i++){
+        printf("    ");
+      }
+      printf ("%s\n", dirent->d_name); 
+    }
+    else{
+      for(int i = 0; i < level; i++){
+        printf("    ");
+      }
+      level++;
+      printf ("%s\n", dirent->d_name);
+      char path[PATH_MAX] = {0};
+      strcat(path, arg); strcat(path, "/"); strcat(path, dirent->d_name);
+      list_all_files(path);
+    }
+  }
+  level--;
+  closedir (parentDir);
+}
+
+void f(const char *arg, char *pattern){
+  DIR *parentDir = opendir(arg);
+  if (parentDir == NULL) { 
+    printf ("Error opening directory '%s'\n", arg); 
+    exit (-1);
+  }
+  struct dirent *dirent;
+  static int level = 0;
+  struct stat statbuf;
+  int fd;
+  if ((fd = open(arg, O_RDONLY)) == -1) {
+		printf("Error opening file %s\n", arg);
+		perror("open");
+		exit(-1);
+	}
+	read(fd, &statbuf, sizeof(struct stat));
+	close(fd);
+  while((dirent = readdir(parentDir)) != NULL){ 
+    if(strcmp(dirent->d_name, ".") == 0 || strcmp(dirent->d_name, "..") == 0){
+      continue;
+    }
+    else if(strstr(dirent->d_name, pattern) == NULL){
+      continue;
+    }
+    if(strcmp(filetype(dirent->d_type), "directory") != 0){
+      for(int i = 0; i < level; i++){
+        printf("    ");
+      }
+      printf ("%s (%lld)\n", dirent->d_name, (long long) statbuf.st_size); 
+    }
+    else{
+      for(int i = 0; i < level; i++){
+        printf("    ");
+      }
+      level++;
+      printf ("%s (%lld)\n", dirent->d_name, (long long) statbuf.st_size);
+      char path[PATH_MAX] = {0};
+      strcat(path, arg); strcat(path, "/"); strcat(path, dirent->d_name);
+      list_all_files(path);
+    }
+  }
+  level--;
+  closedir (parentDir);
+}
+
+void r(const char *arg){
+  
+}
+
+int main(int argc, char **argv){
+
+  list_all_files(argv[1]);
+
+  // int opt;
+
+  // while((opt = getopt(argc, argv, "Ss:f:r")) != -1)  
+  //   {  
+  //       switch(opt)  
+  //       {  
+  //           case 'S':  
+  //           case 's':
+  //             if(optarg != NULL){
+
+  //             }  
+  //           case 'r':  
+  //               printf("option: %c\n", opt);  
+  //               break;  
+  //           case 'f':  
+  //               printf("filename: %s\n", optarg);  
+  //               break;  
+  //           case ':':  
+  //               printf("option needs a value\n");  
+  //               break;  
+  //           case '?':  
+  //               printf("unknown option: %c\n", optopt); 
+  //               break;  
+  //       }  
+  //   }  
+
+  // int i;
+  // struct stat buf;
+  // char *ptr;
+
+  // for(int i = 1; i < argc; i++){
+  //   printf("%s: ", argv[i]);
+  //   if(lstat(argv[i], &buf) < 0){
+  //     printf("lstat error\n");
+  //     continue;
+  //   }
+  //   if(S_ISREG(buf.st_mode)){
+  //     ptr = "regular\n";
+  //   }
+  //   else if(S_ISDIR(buf.st_mode)){
+  //     ptr = "directory\n";
+  //   }
+  //   else if(S_ISCHR(buf.st_mode)){
+  //     ptr = "character special\n";
+  //   }
+  //   else if(S_ISBLK(buf.st_mode)){
+  //     ptr = "block\n";
+  //   }
+  //   else if(S_ISFIFO(buf.st_mode)){
+  //     ptr = "fifo\n";
+  //   }
+  //   else if(S_ISLNK(buf.st_mode)){
+  //     ptr = "link\n";
+  //   }
+  //   else if(S_ISSOCK(buf.st_mode)){
+  //     ptr = "socket\n";
+  //   }
+  //   else{
+  //     ptr = "unknown mode\n";
+  //   }
+  //   printf("%s\n", ptr);
+  // print_stat(buf);
+  // }
+  // exit(0);
 }

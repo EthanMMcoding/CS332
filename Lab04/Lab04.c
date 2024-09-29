@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
 
   while((n = read(read_file_descriptor, buf, BUFF_SIZE)) > 0){
     if((x = write(write_file_descriptor, buf, n)) != n){
-      printf("n is %lu, write is %lu\n", n, x);
+      printf("read is %lu, write is %lu\n", n, x);
       printf("Error writing to output file\n");
 			exit (-1);
     }
