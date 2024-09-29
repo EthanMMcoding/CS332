@@ -98,18 +98,14 @@ void S(const char *arg){
       for(int i = 0; i < level; i++){
         printf("    ");
       }
-      printf("%s (%lld)\n", dirent->d_name, (long long) statbuf.st_size);
-      printf("    ");
-      print_stat(statbuf);
+      printf ("%s (%lld)\n", dirent->d_name, (long long) statbuf.st_size); 
     }
     else{
       for(int i = 0; i < level; i++){
         printf("    ");
       }
       level++;
-      printf("    ");
       printf ("%s (%lld)\n", dirent->d_name, (long long) statbuf.st_size);
-      print_stat(statbuf);
       char path[PATH_MAX] = {0};
       strcat(path, arg); strcat(path, "/"); strcat(path, dirent->d_name);
       S(path);
@@ -136,10 +132,7 @@ void s(const char *arg, long long size){
 	}
 	read(fd, &statbuf, sizeof(struct stat));
 	close(fd);
-  while((dirent = readdir(parentDir)) != NULL){
-    for(int i = 0; i < level; i++){
-        printf("    ");
-      }
+  while((dirent = readdir(parentDir)) != NULL){ 
     if(strcmp(dirent->d_name, ".") == 0 || strcmp(dirent->d_name, "..") == 0){
       continue;
     }
@@ -219,14 +212,14 @@ void r(const char *arg){
 int main(int argc, char **argv){
 
   S(argv[1]);
-  // printf("\n");
-  // printf("\n");
-  // printf("\n");
-  // s(argv[1], 25769803778);
-  // printf("\n");
-  // printf("\n");
-  // printf("\n");
-  // f(argv[1], "h");
+  printf("\n");
+  printf("\n");
+  printf("\n");
+  s(argv[1], 25769803778);
+  printf("\n");
+  printf("\n");
+  printf("\n");
+  f(argv[1], "h");
 
   // int opt;
 
