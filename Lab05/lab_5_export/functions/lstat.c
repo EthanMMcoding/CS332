@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
         if (lstat(argv[i], &buf) < 0) { 
             printf("lstat error"); 
             continue; 
-        } 
+        }
         if (S_ISREG(buf.st_mode)) 
             ptr = "regular"; 
         else if (S_ISDIR(buf.st_mode)) 
