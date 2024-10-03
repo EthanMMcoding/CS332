@@ -8,14 +8,9 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "file_struct.h"
 
-struct file{
-  char *file_name;
-  struct stat file_stat;
-  int level;
-};
-
-typedef struct file file;
+/* returns number of files */
 
 size_t traverse(const char *arg, file **file_arr){
   static size_t arr_count = 0;
@@ -54,16 +49,18 @@ size_t traverse(const char *arg, file **file_arr){
         exit(-1);
       }
     }
-    int len = strlen(dirent->d_name);
-    curr_file.file_name = (char*)malloc(len + 1);
-    memccpy(curr_file.file_name, dirent->d_name, 0, len+1);
+    int len = strlen(dirent->d_name) + 1;
+    curr_file.file_name = (char*)malloc(len);
+    memccpy(curr_file.file_name, dirent->d_name, 0, len);
     curr_file.file_stat = statbuf;
     *(*file_arr + arr_count - 1) = curr_file;
     if(dirent->d_type == DT_LNK){
       char file_name[FILENAME_MAX];
       readlink(file_path, file_name, FILENAME_MAX);
-      stat(file_path, &statbuf);
-      printf("%s is a symbolic link (%s)\n", dirent->d_name, file_name);  
+      printf("sym linked file (%s)\n", file_name);
+      curr_file.sym_linked_file = (char*)malloc(FILENAME_MAX+1);
+      memcpy(curr_file.sym_linked_file, file_name, FILENAME_MAX);
+      *(*file_arr + arr_count - 1) = curr_file;
     }
     else if(dirent->d_type != DT_DIR){
       for(int i = 0; i < level; i++){
