@@ -11,7 +11,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include "traverse.h"
-#include "utility.h"
+#include "file_utility.h"
 
 void S(const char *arg){
   DIR *parentDir = opendir(arg);  // open the directory
@@ -161,25 +161,25 @@ int main(int argc, char **argv){
     exit(-1);
   }
 
-  struct stat **stat_arr = malloc(sizeof(struct stat*));
-  if (stat_arr == NULL) {
+  file **file_arr = malloc(sizeof(struct stat*));
+  if (file_arr == NULL) {
     printf("Error allocating memory for stat_arr\n");
     exit(-1);
 }
 
-*stat_arr = malloc(sizeof(struct stat));
-if(*stat_arr == NULL){
-    printf("Error allocating memory for stat_arr1\n");
-    free(stat_arr);
-    exit(-1);
-}
+  *file_arr = malloc(sizeof(struct stat));
+  if(*file_arr == NULL){
+      printf("Error allocating memory for stat_arr1\n");
+      free(file_arr);
+      exit(-1);
+  }
 
-  size_t arr_count = traverse(argv[1], stat_arr);
+  size_t arr_count = traverse(argv[1], file_arr);
   printf("\n");
   
   for(int i = 0; i < arr_count; i++){
     printf("file type:                ");
-    switch ((*(*stat_arr + i)).st_mode & S_IFMT){
+    switch ((*(*file_arr + i)).file_stat.st_mode & S_IFMT){
     case S_IFREG: printf("regular\n");   break;
     case S_IFDIR: printf("directory\n"); break;
     case S_IFCHR: printf("character\n"); break;

@@ -1,6 +1,7 @@
-#ifndef PRINT_STAT
+#ifndef FILE_UTILITY
 
 #define _XOPEN_SOURCE 700
+#define _DEFAULT_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,6 +9,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <time.h>
+#include <dirent.h>
 
 void print_stat(struct stat statbuf){
   printf("file type:                ");

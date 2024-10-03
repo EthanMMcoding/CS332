@@ -9,7 +9,15 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-size_t traverse(const char *arg, struct stat **stat_arr){
+struct file{
+  char *file_name;
+  struct stat file_stat;
+  int level;
+};
+
+typedef struct file file;
+
+size_t traverse(const char *arg, file **file_arr){
   static size_t arr_count = 0;
   DIR *parentDir = opendir(arg);
   if (parentDir == NULL) { 
@@ -19,6 +27,8 @@ size_t traverse(const char *arg, struct stat **stat_arr){
   struct dirent *dirent;
   static int level = 0;
   struct stat statbuf;
+  file curr_file;
+  curr_file.level = level;
   while((dirent = readdir(parentDir)) != NULL){
     if(strcmp(dirent->d_name, ".") == 0 || strcmp(dirent->d_name, "..") == 0){
       continue;
@@ -30,21 +40,25 @@ size_t traverse(const char *arg, struct stat **stat_arr){
       }
     if(!arr_count){
       arr_count++;
-      *stat_arr = (struct stat*)malloc(arr_count * sizeof(struct stat));
-      if(*stat_arr == NULL){
+      *file_arr = (file*)malloc(arr_count * sizeof(file));
+      if(*file_arr == NULL){
         printf("Error calling initial malloc");
         exit(-1);
       }
     }
     else{
       arr_count++;
-      *stat_arr = realloc(*stat_arr, arr_count * sizeof(struct stat));
-      if(*stat_arr == NULL){
+      *file_arr = (file*)realloc(*file_arr, arr_count * sizeof(file));
+      if(*file_arr == NULL){
         printf("Error reallocating\n");
         exit(-1);
       }
     }
-    *(*stat_arr + arr_count - 1) = statbuf;
+    int len = strlen(dirent->d_name);
+    curr_file.file_name = (char*)malloc(len + 1);
+    memccpy(curr_file.file_name, dirent->d_name, 0, len+1);
+    curr_file.file_stat = statbuf;
+    *(*file_arr + arr_count - 1) = curr_file;
     if(dirent->d_type == DT_LNK){
       char file_name[FILENAME_MAX];
       readlink(file_path, file_name, FILENAME_MAX);
@@ -65,7 +79,7 @@ size_t traverse(const char *arg, struct stat **stat_arr){
       printf ("%s (%lld)\n", dirent->d_name, (long long) statbuf.st_size);
       char dir_path[PATH_MAX] = {0};
       strcat(dir_path, arg); strcat(dir_path, "/"); strcat(dir_path, dirent->d_name);
-      traverse(dir_path, stat_arr);
+      traverse(dir_path, file_arr);
     }
   }
   level--;
