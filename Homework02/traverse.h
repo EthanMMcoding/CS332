@@ -57,30 +57,17 @@ size_t traverse(const char *arg, file **file_arr){
     if(dirent->d_type == DT_LNK){
       char file_name[FILENAME_MAX];
       readlink(file_path, file_name, FILENAME_MAX);
-      printf("sym linked file (%s)\n", file_name);
       curr_file.sym_linked_file = (char*)malloc(FILENAME_MAX+1);
       memcpy(curr_file.sym_linked_file, file_name, FILENAME_MAX);
       *(*file_arr + arr_count - 1) = curr_file;
     }
-    else if(dirent->d_type != DT_DIR){
-      for(int i = 0; i < level; i++){
-        printf("    ");
-      }
-      printf("%s (%lld)\n", dirent->d_name, (long long) statbuf.st_size);   
-    }
-    else{
-      for(int i = 0; i < level; i++){
-        printf("    ");
-      }
+    else if(dirent->d_type == DT_DIR){
       level++;
-      printf ("%s (%lld)\n", dirent->d_name, (long long) statbuf.st_size);
-      char dir_path[PATH_MAX] = {0};
-      strcat(dir_path, arg); strcat(dir_path, "/"); strcat(dir_path, dirent->d_name);
-      traverse(dir_path, file_arr);
+      traverse(file_path, file_arr);
     }
   }
   level--;
-  closedir (parentDir);
+  closedir(parentDir);
   return arr_count;
 }
 

@@ -36,7 +36,6 @@ int main(int argc, char **argv){
   }
 
   size_t arr_count = traverse(argv[1], file_arr);
-  printf("\n");
   
   // for(int i = 0; i < arr_count; i++){
   //   printf("file type:                ");
