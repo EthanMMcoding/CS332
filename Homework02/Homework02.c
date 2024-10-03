@@ -36,50 +36,59 @@ int main(int argc, char **argv){
   }
 
   size_t arr_count = traverse(argv[1], file_arr);
-  
-  // for(int i = 0; i < arr_count; i++){
-  //   printf("file type:                ");
-  //   switch ((*(*file_arr + i)).file_stat.st_mode & S_IFMT){
-  //   case S_IFREG: printf("regular\n");   break;
-  //   case S_IFDIR: printf("directory\n"); break;
-  //   case S_IFCHR: printf("character\n"); break;
-  //   case S_IFBLK: printf("block\n");     break;
-  //   case S_IFIFO: printf("FIFO/pipe\n"); break;
-  //   case S_IFLNK: printf("symlink\n");   break;
-  //   case S_IFSOCK: printf("socket\n");   break;
-  //   default :
-  //     printf("unkown?\n");
+
+  r(*file_arr, arr_count);
+
+  for(int i = 0; i < arr_count; i++){
+    file file_i = *(*file_arr+i);
+    printf("file name: %s filesize: %ld\n", file_i.file_name, file_i.file_stat.st_size);
+  }
+
+  // int opt;
+  // char *opt_arr = (char*)malloc(sizeof(char));
+  // int opt_counter = 0;
+  // char *string_pattern = (char*)malloc(sizeof(char));
+  // int file_size_in_bytes = 0;
+
+  // while((opt = getopt(argc, argv, "Ss:f:r")) != -1) {
+  //   switch(opt){  
+  //     case 'S':
+  //       opt_counter++;
+  //       opt_arr = (char*)realloc(*opt_arr, opt_counter * sizeof(char));
+  //       *(opt_arr + opt_counter - 1) = "S";
   //     break;
+  //     case 's':
+  //       opt_counter++;
+  //       opt_arr = (char*)realloc(*opt_arr, opt_counter * sizeof(char));
+  //       *(opt_arr + opt_counter - 1) = "s";
+  //       if(optarg){
+  //         file_size_in_bytes = optarg;
+  //         s(argv[argc-1], arr_count, (long long)optarg);
+  //       }
+  //       else{
+  //         printf("Usage: -s <file size in bytes>");
+  //       }
+  //     break;
+  //     case 'r':  
+  //       printf("option: %c\n", opt);  
+  //     break;  
+  //     case 'f':  
+  //       opt_counter++;
+  //       opt_arr = (char*)realloc(*opt_arr, opt_counter * sizeof(char));
+  //       *(opt_arr + opt_counter) = "f";
+  //       if(optarg){
+  //         string_pattern = (char*)malloc(strlen(optarg) * sizeof(char));
+  //       }
+  //       else{
+  //         printf("Usage: -f <string pattern>");
+  //       }
+  //     break;
+  //     case ':':  
+  //       printf("option needs a value\n");  
+  //      break;  
+  //     case '?':  
+  //       printf("unknown option: %c\n", optopt); 
+  //     break;  
   //   }
   // }
-
-  int opt;
-
-  while((opt = getopt(argc, argv, "Ss:f:r")) != -1)  
-    {
-        switch(opt)  
-        {  
-            case 'S':
-            printf("\n");
-              S(*file_arr, arr_count);
-              break;
-            case 's':
-              // if(optarg != NULL){
-              //    s(argv[argc-1], (long long)optarg);
-              // }
-              break;
-            case 'r':  
-                printf("option: %c\n", opt);  
-                break;  
-            case 'f':  
-                printf("filename: %s\n", optarg);  
-                break;  
-            case ':':  
-                printf("option needs a value\n");  
-                break;  
-            case '?':  
-                printf("unknown option: %c\n", optopt); 
-                break;  
-        }
-    }
 }

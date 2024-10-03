@@ -11,9 +11,8 @@
 #include "file_struct.h"
 
 /* returns number of files */
-
 size_t traverse(const char *arg, file **file_arr){
-  static size_t arr_count = 0;
+  static size_t file_count = 0;
   DIR *parentDir = opendir(arg);
   if (parentDir == NULL) { 
     printf("Error opening directory '%s'\n", arg); 
@@ -33,17 +32,17 @@ size_t traverse(const char *arg, file **file_arr){
     if(lstat(file_path, &statbuf) < 0){
         printf("lstat error on file %s\n", file_path);
       }
-    if(!arr_count){
-      arr_count++;
-      *file_arr = (file*)malloc(arr_count * sizeof(file));
+    if(!file_count){
+      file_count++;
+      *file_arr = (file*)malloc(file_count * sizeof(file));
       if(*file_arr == NULL){
         printf("Error calling initial malloc");
         exit(-1);
       }
     }
     else{
-      arr_count++;
-      *file_arr = (file*)realloc(*file_arr, arr_count * sizeof(file));
+      file_count++;
+      *file_arr = (file*)realloc(*file_arr, file_count * sizeof(file));
       if(*file_arr == NULL){
         printf("Error reallocating\n");
         exit(-1);
@@ -53,13 +52,14 @@ size_t traverse(const char *arg, file **file_arr){
     curr_file.file_name = (char*)malloc(len);
     memccpy(curr_file.file_name, dirent->d_name, 0, len);
     curr_file.file_stat = statbuf;
-    *(*file_arr + arr_count - 1) = curr_file;
+    *(*file_arr + file_count - 1) = curr_file;
+    
     if(dirent->d_type == DT_LNK){
       char file_name[FILENAME_MAX];
       readlink(file_path, file_name, FILENAME_MAX);
       curr_file.sym_linked_file = (char*)malloc(FILENAME_MAX+1);
       memcpy(curr_file.sym_linked_file, file_name, FILENAME_MAX);
-      *(*file_arr + arr_count - 1) = curr_file;
+      *(*file_arr + file_count - 1) = curr_file;
     }
     else if(dirent->d_type == DT_DIR){
       level++;
@@ -68,7 +68,7 @@ size_t traverse(const char *arg, file **file_arr){
   }
   level--;
   closedir(parentDir);
-  return arr_count;
+  return file_count;
 }
 
 #endif
