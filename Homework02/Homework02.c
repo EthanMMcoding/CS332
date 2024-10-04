@@ -2,17 +2,10 @@
 #define _DEFAULT_SOURCE
 
 #include <stdio.h>
-#include <dirent.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <time.h>
-#include <fcntl.h>
 #include <string.h>
 #include "traverse.h"
-#include "file_utility.h"
-#include "options.h"
+#include "sort.h"
 #include "file_struct.h"
 
 int main(int argc, char **argv){

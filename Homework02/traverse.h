@@ -4,9 +4,7 @@
 
 #include <stdio.h>
 #include <dirent.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #include "file_struct.h"
 
@@ -28,7 +26,12 @@ size_t traverse(const char *arg, file **file_arr){
       continue;
     }
     char file_path[PATH_MAX] = {0};
-    snprintf(file_path, sizeof(file_path), "%s/%s", arg, dirent->d_name);
+    if(strcmp(arg, "/") != 0){
+      snprintf(file_path, sizeof(file_path), "%s/%s", arg, dirent->d_name);
+    }
+    else{
+      snprintf(file_path, sizeof(file_path), "%s%s", arg, dirent->d_name);
+    }
     if(lstat(file_path, &statbuf) < 0){
         printf("lstat error on file %s\n", file_path);
       }

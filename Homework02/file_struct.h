@@ -1,5 +1,6 @@
 #ifndef FILE_STRUCT
 #define FILE_STRUCT
+
 #include <sys/stat.h>
 
 struct file{
