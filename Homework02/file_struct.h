@@ -7,6 +7,7 @@ struct file{
   int level;
   char *file_name;
   char *sym_linked_file;
+  int filtered;
 };
 
 typedef struct file file;

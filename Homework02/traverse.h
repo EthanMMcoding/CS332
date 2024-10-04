@@ -50,10 +50,10 @@ size_t traverse(const char *arg, file **file_arr){
     }
     int len = strlen(dirent->d_name) + 1;
     curr_file.file_name = (char*)malloc(len);
-    memccpy(curr_file.file_name, dirent->d_name, 0, len);
+    memcpy(curr_file.file_name, dirent->d_name, len);
     curr_file.file_stat = statbuf;
+    curr_file.filtered = 0;
     *(*file_arr + file_count - 1) = curr_file;
-    
     if(dirent->d_type == DT_LNK){
       char file_name[FILENAME_MAX];
       readlink(file_path, file_name, FILENAME_MAX);
