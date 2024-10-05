@@ -5,9 +5,10 @@
 
 struct file{
   struct stat file_stat;
-  int level;
   char *file_name;
   char *sym_linked_file;
+  char *parent_dir_path;
+  int level;
   int filtered;
 };
 

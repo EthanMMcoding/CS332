@@ -90,9 +90,7 @@ int main(int argc, char **argv){
   }
   /* r and S */
   if(opt_arr[2] && opt_arr[0]){
-    if(strcmp(opt_arr[2], "r") == 0){
-      sort(*file_arr, arr_count);
-    }
+    sort(*file_arr, arr_count);
     for(int i = 0; i < arr_count; i++){
       file curr_file = (*(*file_arr + i));
       if(curr_file.filtered){
@@ -104,13 +102,23 @@ int main(int argc, char **argv){
   /* just r */
   else if(opt_arr[2]){
     sort(*file_arr, arr_count);
+    
   }
-  /* just S */
+  /* with S */
   else if(opt_arr[0]){
     for(int i = 0; i < arr_count; i++){
       file curr_file = (*(*file_arr + i));
       if(curr_file.filtered){
         continue;
+      }
+      if(opt_arr[3] || opt_arr[1]){
+        int parent_level = curr_file.level - 1;
+        if((strstr(curr_file.parent_dir_path, string_pattern) == NULL || file_size_in_bytes > 4096) && curr_file.level > 0){
+          for(int i = 0; i < parent_level; i++){
+            printf("\t");
+          }
+          printf("(filtered directory) %s\n", curr_file.parent_dir_path);
+        }
       }
       for(int x = 0; x < curr_file.level; x++){
         printf("\t");
@@ -125,7 +133,27 @@ int main(int argc, char **argv){
       if(curr_file.filtered){
         continue;
       }
-      if(opt_arr[3] || opt_arr[2]){
+      if(opt_arr[2]){
+        for(int i = 0; i < arr_count; i++){
+          file curr_file = (*(*file_arr + i));
+          if(curr_file.filtered){
+            continue;
+          }
+          printf("%s (%lld)\n", curr_file.file_name, (long long)curr_file.file_stat.st_size);
+        }
+        break;
+      }
+      if(opt_arr[3] || opt_arr[1]){
+        int parent_level = curr_file.level - 1;
+        if((strstr(curr_file.parent_dir_path, string_pattern) == NULL || file_size_in_bytes > 4096) && parent_level > 0){
+          for(int i = 0; i < parent_level; i++){
+            printf("\t");
+          }
+          printf("(filtered directory) %s\n", curr_file.parent_dir_path);
+        }
+        for(int i = 0; i < curr_file.level; i++){
+          printf("\t");
+        }
         printf("%s\n", curr_file.file_name);
       }
       else{

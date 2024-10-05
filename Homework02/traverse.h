@@ -20,6 +20,8 @@ size_t traverse(const char *arg, file **file_arr){
   static int level = 0;
   struct stat statbuf;
   file curr_file;
+  curr_file.parent_dir_path = (char*)malloc(strlen(arg) + 1);
+  strcpy(curr_file.parent_dir_path, arg);
   curr_file.level = level;
   while((dirent = readdir(parentDir)) != NULL){
     if(strcmp(dirent->d_name, ".") == 0 || strcmp(dirent->d_name, "..") == 0){
@@ -53,7 +55,7 @@ size_t traverse(const char *arg, file **file_arr){
     }
     int len = strlen(dirent->d_name) + 1;
     curr_file.file_name = (char*)malloc(len);
-    memcpy(curr_file.file_name, dirent->d_name, len);
+    strcpy(curr_file.file_name, dirent->d_name);
     curr_file.file_stat = statbuf;
     curr_file.filtered = 0;
     *(*file_arr + file_count - 1) = curr_file;
@@ -61,7 +63,7 @@ size_t traverse(const char *arg, file **file_arr){
       char file_name[FILENAME_MAX];
       readlink(file_path, file_name, FILENAME_MAX);
       curr_file.sym_linked_file = (char*)malloc(FILENAME_MAX+1);
-      memcpy(curr_file.sym_linked_file, file_name, FILENAME_MAX);
+      strcpy(curr_file.sym_linked_file, file_name);
       *(*file_arr + file_count - 1) = curr_file;
     }
     else if(dirent->d_type == DT_DIR){
