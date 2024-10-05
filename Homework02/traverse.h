@@ -58,6 +58,7 @@ size_t traverse(const char *arg, file **file_arr){
     strcpy(curr_file.file_name, dirent->d_name);
     curr_file.file_stat = statbuf;
     curr_file.filtered = 0;
+    curr_file.sym_linked_file = NULL;
     *(*file_arr + file_count - 1) = curr_file;
     if(dirent->d_type == DT_LNK){
       char file_name[FILENAME_MAX];

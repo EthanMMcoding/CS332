@@ -1,3 +1,4 @@
+/* compile with gcc -o hw2 Homework02.c*/
 #define _XOPEN_SOURCE 700
 #define _DEFAULT_SOURCE
 
@@ -96,9 +97,13 @@ int main(int argc, char **argv){
       if(curr_file.filtered){
         continue;
       }
+      if(curr_file.sym_linked_file){
+        printf("Symbolic link: %s (%s) (%lld)\n", curr_file.file_name, curr_file.sym_linked_file, (long long)curr_file.file_stat.st_size);
+      }
       printf("%s (%lld)\n", curr_file.file_name, (long long)curr_file.file_stat.st_size);
     }
   }
+
   /* just r */
   else if(opt_arr[2]){
     sort(*file_arr, arr_count);
@@ -113,7 +118,7 @@ int main(int argc, char **argv){
       }
       if(opt_arr[3] || opt_arr[1]){
         int parent_level = curr_file.level - 1;
-        if((strstr(curr_file.parent_dir_path, string_pattern) == NULL || file_size_in_bytes > 4096) && curr_file.level > 0){
+        if((strstr(curr_file.parent_dir_path, string_pattern) == NULL || file_size_in_bytes > 4096) && curr_file.level > 0){ /* 4096, default size of directories (I hope)*/
           for(int i = 0; i < parent_level; i++){
             printf("\t");
           }
@@ -123,11 +128,14 @@ int main(int argc, char **argv){
       for(int x = 0; x < curr_file.level; x++){
         printf("\t");
       }
+       if(curr_file.sym_linked_file){
+        printf("Symbolic link: %s (%s) (%lld)\n", curr_file.file_name, curr_file.sym_linked_file, (long long)curr_file.file_stat.st_size);
+      }
       printf("%s (%lld)\n", curr_file.file_name, (long long)curr_file.file_stat.st_size);
     }
   }
   /* if not S */
-  if(!opt_arr[0]){
+  if(!opt_arr[0]  && (opt_arr[3] || opt_arr[1])){
     for(int i = 0; i < arr_count; i++){
       file curr_file = (*(*file_arr + i));
       if(curr_file.filtered){
@@ -139,6 +147,10 @@ int main(int argc, char **argv){
           if(curr_file.filtered){
             continue;
           }
+          if(curr_file.sym_linked_file){
+            printf("Symbolic link: %s (%s)\n", curr_file.file_name, curr_file.sym_linked_file);
+          }
+          printf("%s \n", curr_file.file_name);
           printf("%s (%lld)\n", curr_file.file_name, (long long)curr_file.file_stat.st_size);
         }
         break;
@@ -164,4 +176,5 @@ int main(int argc, char **argv){
       }
     }
   }
+  free(file_arr);
 }
