@@ -1,0 +1,6 @@
+Sources:
+  https://pubs.opengroup.org/onlinepubs/9799919799/
+  https://stackoverflow.com/questions/2898364/strcpy-vs-memcpy
+  https://stackoverflow.com/questions/56317418/malloc-corrupted-top-size
+  https://www.geeksforgeeks.org/snprintf-c-library/
+  https://stackoverflow.com/questions/10197219/reallocating-memory-for-a-struct-array-in-c
