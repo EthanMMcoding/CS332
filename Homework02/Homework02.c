@@ -11,9 +11,23 @@
 
 int main(int argc, char **argv){
 
-  if(argc < 2){
-    printf("Usage: %s <dirname>, -s<file size in bytes>, -S, -f<string pattern>, -r\n", argv[0]);
-    exit(-1);
+  /* remember, a pointer to a pointer in this case is just a pointer to a pointer to 
+  an allocated portion of memory, the pointer being pointed to points to the 
+  beginning of this allocated portion, pointer arithmetic allows access to the 
+  elements past the first one*/
+
+  file **file_arr = malloc(sizeof(struct file*));
+
+  if(argc == 1){
+    size_t arr_count = traverse(".", file_arr);
+    for(int i = 0; i < arr_count; i++){
+      file curr_file = *(*file_arr + i);
+      for(int j = 0; j < curr_file.level; j++){
+        printf("\t");
+      }
+      printf("%s\n", curr_file.file_name);
+    }
+    return 0;
   }
 
   int opt;
@@ -58,16 +72,20 @@ int main(int argc, char **argv){
     }
   }
 
-  file **file_arr = malloc(sizeof(struct stat*));
-  if(file_arr == NULL) {
-    printf("Error allocating memory for stat_arr\n");
-    exit(-1);
+  if(!opt_arr[0] && !opt_arr[1] && !opt_arr[2] && !opt_arr[3]){
+    size_t arr_count = traverse(".", file_arr);
+    for(int i = 0; i < arr_count; i++){
+      file curr_file = *(*file_arr + i);
+      for(int j = 0; j < curr_file.level; j++){
+        printf("\t");
+      }
+      printf("%s\n", curr_file.file_name);
+    }
+    return 0;
   }
 
-  *file_arr = malloc(sizeof(struct stat));
-  if(*file_arr == NULL){
-    printf("Error allocating memory for stat_arr1\n");
-    free(file_arr);
+  if(file_arr == NULL) {
+    printf("Error allocating memory for stat_arr\n");
     exit(-1);
   }
 
@@ -107,7 +125,6 @@ int main(int argc, char **argv){
   /* just r */
   else if(opt_arr[2]){
     sort(*file_arr, arr_count);
-    
   }
   /* with S */
   else if(opt_arr[0]){
@@ -170,11 +187,12 @@ int main(int argc, char **argv){
       }
       else{
         for(int x = 0; x < curr_file.level; x++){
-        printf("\t");
-      }
-      printf("%s\n", curr_file.file_name);
+          printf("\t");
+        }
+        printf("%s\n", curr_file.file_name);
       }
     }
   }
   free(file_arr);
+  return 0;
 }

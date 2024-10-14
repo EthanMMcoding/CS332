@@ -7,7 +7,7 @@ Project #: Homework #2
 To compile:
   Using Makefile: make
   Without Makefile:
-    gcc -Wall -g -o hw2 Homework02.case
+    gcc -Wall -g -o hw2 Homework02.c
 
 To run:
   Using Makefile: make run ARGS="..."
