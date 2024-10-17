@@ -73,9 +73,12 @@ int main(int argc, char **argv){
   }
 
   if(!opt_arr[0] && !opt_arr[1] && !opt_arr[2] && !opt_arr[3]){
-    size_t arr_count = traverse(".", file_arr);
+    size_t arr_count = traverse(argv[1], file_arr);
     for(int i = 0; i < arr_count; i++){
       file curr_file = *(*file_arr + i);
+      for(int j = 0; j < curr_file.level; j++){
+        printf("\t");
+      }
       for(int j = 0; j < curr_file.level; j++){
         printf("\t");
       }

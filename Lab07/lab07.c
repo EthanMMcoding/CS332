@@ -31,7 +31,6 @@ int main(int argc, char** argv){
 
   int e = 0;
   while(fgets(line, BUFSIZ, fp) != NULL){
-
     line[strlen(line) - 1] = 0;
     lines[e++] = line;
     printf("\n");
