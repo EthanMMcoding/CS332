@@ -2,7 +2,7 @@
 #include "file_struct.h"
 #include "word_counter.h"
 
-int main(int argc, int **argv){
+int main(int argc, char **argv){
 
   // file **file_arr = (file**)malloc(sizeof(struct file*));
 
@@ -25,7 +25,7 @@ int main(int argc, int **argv){
 
   FILE *fp = fopen("sample_file", "r");
 
-  int x = word_counter(fp);
+  int x = word_counter3(fp);
 
   printf("word count: %d\n", x);
   

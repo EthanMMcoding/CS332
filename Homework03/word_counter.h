@@ -3,6 +3,6 @@
 
 #include <stdio.h>
 
-int word_counter(FILE *fp);
+int word_counter3(FILE *fp);
 
 #endif

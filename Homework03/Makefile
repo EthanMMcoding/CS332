@@ -5,16 +5,16 @@ CC = gcc
 CFLAGS = -Wall -g
 
 # Target executable
-TARGET = traverse
+TARGET = hw3
 
 # Source files
-SRC = traverse.c arguments.c file_operations.c sort.c
+SRC = hw3.c word_counter.c
 
 # Object files (generated from source files)
 OBJ = $(SRC:.c=.o)
 
 # Header files
-HEADERS = arguments.h file_operations.h sort.h
+HEADERS = word_counter.h
 
 # Default rule to build the executable
 $(TARGET): $(OBJ)
