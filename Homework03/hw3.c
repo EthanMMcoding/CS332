@@ -12,6 +12,7 @@ int main(int argc, char **argv){
   pid_t pid;
   int status;
   int i = 0;
+  int x = 0;
 
   if (argc != 2) {
     printf("Usage: %s <command> [args]\n", argv[0]);
@@ -20,10 +21,13 @@ int main(int argc, char **argv){
 
   file **file_arr = (file**)malloc(sizeof(struct file*));
 
-
   size_t num_files = traverse(argv[1], file_arr);
 
+  pid_t *pid_arr = (pid_t*)malloc(sizeof(pid_t) * num_files);
+
+  int count = 0;
   pid = fork();
+  printf("count: %d\n", ++count);
 
   while(pid == 0){
     FILE *fp;
@@ -61,10 +65,14 @@ int main(int argc, char **argv){
     }
     i++;
     if(i >= num_files){
+      for(int j = 0; j < num_files; j++){
+        printf("pid_arr[%d]: %d\n", j, pid_arr[j]);
+      }
       exit(1);
     }
-    pid = fork();
-    printf("%d\n", i);
+    pid = fork(); /* fork is called once and returns twice, only called repeatedly in the children */
+    pid_arr[x++] = getpid();
+    printf("Parent id: %d Current id: %d\n", getppid(), getpid());
   }
   if(pid > 0){
       wait(&status);
@@ -79,49 +87,6 @@ int main(int argc, char **argv){
       perror("fork");
       exit(EXIT_FAILURE);
     }
-
-  // for(int i = 0; i < num_files; i++){
-  //   file curr_file = *(*file_arr + i);
-  //   char *file_name = curr_file.file_name;
-
-  //   pid = fork();
-
-  //   if(pid == 0){
-  //   FILE *fp;
-  //   if(curr_file.level > 0){
-  //     char *file_path = (char*)malloc(sizeof(char) * BUFSIZ);
-  //     snprintf(file_path, BUFSIZ, "%s/%s", curr_file.parent_dir_path, curr_file.file_name);
-  //     printf("file path: %s\n", file_path);
-  //     printf("\nYo %s\n\n", file_path);
-  //     fp = fopen(file_path, "r");
-  //     if(fp == NULL){
-  //       printf("Opening file: %s failed.\n", file_name);
-  //       exit(-1);
-  //     }
-  //   }
-  //   else{
-  //     fp = fopen(file_name, "r");
-  //     if(fp == NULL){
-  //       printf("Opening file: %s failed.\n", file_name);
-  //       exit(-1);
-  //     }
-  //   }
-  //     if(strstr(file_name, ".txt")){
-  //       int word_count = word_counter(fp);
-  //       printf("File Name: %s, File size: %lu, Word count: %d\n", file_name, curr_file.file_stat.st_size, word_count);
-  //     }
-  //     else{
-  //       printf("File Name: %s, File size: %lu\n", file_name, curr_file.file_stat.st_size);
-  //     }
-  //     fclose(fp);
-  //   }
-  // }
-
-  // FILE *fp = fopen("sample_file", "r");
-
-  // int x = word_counter(fp);
-
-  // printf("word count: %d\n", x);
   
   return 0;
 }
