@@ -1,11 +1,11 @@
-#ifndef TRAVERSE
-
 #define _XOPEN_SOURCE 700
+#define _DEFAULT_SOURCE
 
 #include <stdio.h>
 #include <dirent.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include "file_struct.h"
 
 /* returns number of files */
@@ -76,5 +76,3 @@ size_t traverse(const char *arg, file **file_arr){
   closedir(parentDir);
   return file_count;
 }
-
-#endif

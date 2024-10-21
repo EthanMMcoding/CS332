@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "file_struct.h": "c",
+    "traverse.h": "c"
+  }
+}

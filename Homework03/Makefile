@@ -8,13 +8,13 @@ CFLAGS = -Wall -g
 TARGET = hw3
 
 # Source files
-SRC = hw3.c word_counter.c
+SRC = hw3.c word_counter.c traverse.c
 
 # Object files (generated from source files)
 OBJ = $(SRC:.c=.o)
 
 # Header files
-HEADERS = word_counter.h
+HEADERS = word_counter.h traverse.h
 
 # Default rule to build the executable
 $(TARGET): $(OBJ)
@@ -30,7 +30,7 @@ clean:
 
 # Convenience rule to run the program
 run: $(TARGET)
-	./$(TARGET)
+	./$(TARGET) $(ARGS)
 
 # Phony targets
 .PHONY: clean run
