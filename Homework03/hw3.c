@@ -1,3 +1,7 @@
+/* Name: Ethan Martignoni
+   BlazerID: ethanmm
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -25,9 +29,7 @@ int main(int argc, char **argv){
 
   pid_t *pid_arr = (pid_t*)malloc(sizeof(pid_t) * num_files);
 
-  int count = 0;
   pid = fork();
-  printf("count: %d\n", ++count);
 
   while(pid == 0){
     FILE *fp;
@@ -72,7 +74,6 @@ int main(int argc, char **argv){
     }
     pid = fork(); /* fork is called once and returns twice, only called repeatedly in the children */
     pid_arr[x++] = getpid();
-    printf("Parent id: %d Current id: %d\n", getppid(), getpid());
   }
   if(pid > 0){
       wait(&status);

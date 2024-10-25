@@ -13,6 +13,7 @@ size_t traverse(const char *arg, file **file_arr){
   static size_t file_count = 0;
   DIR *parentDir = opendir(arg);
   if (parentDir == NULL) { 
+    perror("opendir");
     printf("Error opening directory '%s'\n", arg); 
     exit (-1);
   }
