@@ -55,6 +55,7 @@ int main(int argc, char** argv){
       args[i++] = token;
       token = strtok(NULL, " ");
     }
+    args[i] = NULL;
 
     start_time = time(NULL);
     time_t *start_time_ptr = &start_time;
@@ -63,6 +64,9 @@ int main(int argc, char** argv){
     num_forks++;
 
     if(pid == 0){
+      for(int x = 0; x < i; x++){
+        printf("args[%d]: %s\n", x, args[x]);
+      }
       execvp(args[0], args);
       printf("If you see this statement then execvp failed ;-(\n");
       perror("execvp");
