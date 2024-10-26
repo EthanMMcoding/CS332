@@ -13,24 +13,29 @@
 pid_t pid;
 
 static void handle_parent_interupts(int signo){
+  char *buf = "Waiting for ctrl+\\ to end the process\n";
   
   switch(signo){
     case SIGINT:
       printf("\nParent overriding SIGINT signal %d, waiting for ctrl+\\ \n", signo);
+      for(;;)
+          pause();
       break;
     case SIGTSTP:
       printf("\nParent overriding SIGTSTP signal %d, waiting for ctrl+\\ \n", signo);
+      for(;;)
+          pause();
       break;
     default:
-      printf("Recieved signal %d\n", signo);
+      printf("\nRecieved signal %d\n", signo);
       break;
   }
   fflush(stdout);
-  signal(signo, handle_parent_interupts);
+  fwrite(buf, sizeof(char), 40, stdout);
+  fflush(stdout);
 }
 
 int main(int argc, char **argv) {
-    int status;
 
     if (argc < 2) {
         printf("Usage: %s <command> [args]\n", argv[0]);
@@ -50,14 +55,14 @@ int main(int argc, char **argv) {
         if (signal(SIGTSTP, handle_parent_interupts) == SIG_ERR){
           printf("Unable to catch SIGTSTP\n");
         }
-        printf("Wait for the child process to terminate\n");
-        wait(&status); /* wait for the child process to terminate */
+        int status;
+        wait(&status); /* get child process status */
         if (WIFEXITED(status)) { /* child process terminated normally */
-            printf("Child process exited with status = %d\n", WEXITSTATUS(status));
+          printf("Child process exited with status = %d\n", WEXITSTATUS(status));
         } else { /* child process did not terminate normally */
             printf("Child process did not terminate normally!\n");
             /* look at the man page for wait (man 2 wait) to determine
-               how the child process was terminated */
+                how the child process was terminated */
         }
     } else { /* we have an error */
         perror("fork"); /* use perror to print the system error message */

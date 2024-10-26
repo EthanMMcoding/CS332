@@ -15,6 +15,7 @@ pid_t pid;
 
 static void sig_child(int signo) {
   int status;
+  printf("Inside handler function\n");
 
   signal(signo, SIG_IGN); /* ignore other SIGINT signals */
   waitpid(pid, &status, WNOHANG); /* get child process status */
@@ -47,8 +48,10 @@ int main(int argc, char **argv) {
       printf("Unable to catch SIGCHLD\n");
     }
     printf("Wait for the child process to terminate\n");
-    for ( ; ; )
+    for ( ; ; ){
+      printf("Inside the main function\n");
       pause();
+    }
   } else { /* we have an error */
     perror("fork"); /* use perror to print the system error message */
     exit(EXIT_FAILURE);
