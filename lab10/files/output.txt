@@ -1,0 +1,2 @@
+[stderr]: Hello Ethan!
+Please enter your name: [stdout]: Hello Ethan!

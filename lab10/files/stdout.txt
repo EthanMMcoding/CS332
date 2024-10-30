@@ -1,0 +1,22 @@
+
+[46673]Please enter your name: [46673][stdout]: Hello Ethan!
+[46672]Hey! This is the parent process
+[46728]Please enter your name: [46728][stdout]: Hello Ethan!
+[46727]Hey! This is the parent process
+[47584]Please enter your name: 
+[47584][stdout]: Hello Ethan!
+[47583]Hey! This is the parent process
+[47759]Please enter your name: Ethan
+[47759][stdout]: Hello Ethan!
+[47758]Hey! This is the parent process
+[49159]Please enter your name: world
+[49159][stdout]: Hello world!
+[49158]Hey! This is the parent process
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+ethanmm     3271  0.0  0.0 235668  5888 tty2     Ssl+ 09:57   0:00 /usr/libexec/gdm-wayland-session env GNOME_SHELL_SESSION_MODE=ubuntu /usr/bin/gnome-session --session=ubuntu
+ethanmm     3282  0.0  0.1 298208 16384 tty2     Sl+  09:57   0:00 /usr/libexec/gnome-session-binary --session=ubuntu
+ethanmm    20221  0.0  0.1  17372 11136 pts/0    Ss   11:01   0:00 bash
+ethanmm    39764  0.0  0.1  16608 10752 pts/1    Ss+  12:23   0:00 bash
+ethanmm    49281  0.0  0.0   2684  1280 pts/0    S+   12:58   0:00 ./ioredirect ps -u
+ethanmm    49282  0.0  0.0  13752  4608 pts/0    R+   12:58   0:00 ps -u
+[49281]Hey! This is the parent process

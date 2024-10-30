@@ -1,0 +1,2 @@
+world
+cat stdin.txt

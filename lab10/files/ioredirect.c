@@ -12,6 +12,7 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <string.h>
 
 int main(int argc, char **argv) {
     pid_t pid;
@@ -61,7 +62,12 @@ int main(int argc, char **argv) {
             /* parent process still has the file handle to stdout.txt, 
                now that the child process is done, let us write to
                the file stdout.txt using the write system call */
-            write(fdout, "Hey! This is the parent process\n", 32);
+            char pid[BUFSIZ];
+            sprintf(pid, "%d", getpid());
+            int pid_len = strlen(pid);
+            char buf[BUFSIZ];
+            snprintf(buf, pid_len + 35, "[%s]%s\n", pid, "Hey! This is the parent process\n");
+            write(fdout, buf, pid_len + 34);
             close(fdout);
             /* since we opened the file in append mode, the above text 
                will be added after the output from the child process */
