@@ -1,6 +1,8 @@
 {
   "files.associations": {
     "stdio.h": "c",
-    "functional": "c"
+    "functional": "c",
+    "fcntl.h": "c",
+    "types.h": "c"
   }
 }
