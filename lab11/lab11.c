@@ -35,6 +35,8 @@ int main(int argc, char **argv){
     command[strcspn(command, "\n")] = '\0';
   }
 
+  pclose(fpin);
+
   printf("Exiting program...bye!\n");
   return 0;
 }
