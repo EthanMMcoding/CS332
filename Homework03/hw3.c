@@ -51,7 +51,8 @@ int main(int argc, char **argv){
         snprintf(file_path, BUFSIZ, "%s/%s", parent_path, file_name);
         fp = fopen(file_path, "r");
         if(fp == NULL){
-          perror("fopen");
+          printf("fopen1, error reading file: %s", file_path);
+          exit(-1);
         }
         word_count = word_counter(fp);
         if(fclose(fp) != 0){
@@ -68,7 +69,12 @@ int main(int argc, char **argv){
       else if(file_level == 0 && strstr(file_name, ".txt")){
         fp = fopen(file_name, "r");
         if(fp == NULL){
-          perror("fopen");
+          printf("The parent path is: %s\n", parent_path);
+          for(int i = 0; i < strlen(file_name) + 1; i++){
+            printf("ascii character %d of %s: \n%d\n", i, file_name, file_name[i]);
+          }
+          printf("fopen2, error reading file: %s\n", file_name);
+          exit(-1);
         }
         word_count = word_counter(fp);
         if(fclose(fp) != 0){
