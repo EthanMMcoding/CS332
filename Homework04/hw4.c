@@ -17,6 +17,8 @@ void *gen_nums(void *index);
 void *read_nums(void *arg);
 
 int main(int argc, char **argv){
+  srand(time(NULL));
+
   printf("Entered main\n");
   pid_t pid;
   FILE *fp;
@@ -39,6 +41,10 @@ int main(int argc, char **argv){
       fdin = pipefd[0];
 
       fp = fdopen(fdin, "r");
+      if(fp == NULL){
+        perror("fdopen");
+        exit(-1);
+      }
 
       for(i = 0; i < 10; i++){
         int pthread = pthread_create(&tid[i], NULL, read_nums, (void *)fp);
@@ -59,17 +65,18 @@ int main(int argc, char **argv){
 
       FILE *new_output = fopen("average.txt", "w");
       if(new_output == NULL){
-        printf("Error opening file %s\n", argv[1]);
+        perror("fopen");
         exit(-1);
       }
 
-
-      if(new_output != NULL) {
-        int new_fd = fileno(new_output);
-        dup2(1, new_fd);
-        printf("The average is: %f\n", average);
-        fclose(fp);
+      int new_fd = fileno(new_output);
+      if(dup2(new_fd, 1) == -1){
+        perror("dup2");
+        exit(-1);
       }
+      printf("The average is: %f\n", average);
+      fclose(fp);
+      close(pipefd[0]);
 
     }
     else if(pid > 0){
@@ -97,13 +104,15 @@ int main(int argc, char **argv){
           pthread_join(ptid[i], NULL);
         }
       }
-       wait(&status);
-        if(WIFEXITED(status)){
-          printf("Child process exited with status = %d\n", WEXITSTATUS(status));
-        }
-        else{
-          printf("Child process did not terminate normally!\n");
-        }
+      fclose(fp);
+      close(pipefd[1]);
+      wait(&status);
+      if(WIFEXITED(status)){
+        printf("Child process exited with status = %d\n", WEXITSTATUS(status));
+      }
+      else{
+        printf("Child process did not terminate normally!\n");
+      }
     }
     else{
       perror("fork");
