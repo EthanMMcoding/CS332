@@ -2,7 +2,7 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -g -lpthread
+CFLAGS = -Wall -lpthread
 
 # Target executable
 TARGET = hw4
